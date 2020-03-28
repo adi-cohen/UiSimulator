@@ -137,13 +137,16 @@ class Server:
 
 def main(args):
     server = Server(args.listen_port)
+    print("hi2")
+
     simulator = FlightSimulator(EXAMPLE_FIELDS)
+    print("hi")
     server.serve(simulator)
 
 
 if __name__ == '__main__':
     logger = logging.getLogger("FlightSimulator")
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser()
     parser.add_argument('--listen-port', default=DEFAULT_LISTEN_PORT, type=int)
     main(parser.parse_args())

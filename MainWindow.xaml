@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FlightSimulatorApp" xmlns:views="clr-namespace:FlightSimulator.Views"
+        xmlns:local="clr-namespace:FlightSimulatorApp" xmlns:views="clr-namespace:FlightSimulatorApp.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="574.965" Width="1023.13">
     <Grid Margin="0,0,-0.2,24.6">

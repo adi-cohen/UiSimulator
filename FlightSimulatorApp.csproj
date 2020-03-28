@@ -56,7 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\IServerModel.cs" />
+    <Compile Include="Model\ITelentClient.cs" />
     <Compile Include="Model\ServerModel.cs" />
+    <Compile Include="Model\SimulatorTelnetClient.cs" />
     <Compile Include="Views\Joystick.xaml.cs">
       <DependentUpon>Joystick.xaml</DependentUpon>
     </Compile>
