@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FlightSimulatorApp.Model
 {
@@ -15,8 +16,13 @@ namespace FlightSimulatorApp.Model
     
         void ITelentClient.connect(string ip, int port)
         {
+            //System.Net.Sockets.SocketException
             Client = new TcpClient(ip, port);
+            Client.ReceiveTimeout = 10000;
+            Client.SendTimeout = 10000;
             this.Stream = Client.GetStream();
+            
+            
         }
 
         void ITelentClient.disconnect()
@@ -34,10 +40,11 @@ namespace FlightSimulatorApp.Model
             // String to store the response ASCII representation.
             String responseData = String.Empty;
 
-            // Read the first batch of the TcpServer response bytes.
-            Int32 bytes = Stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Console.WriteLine("Received: {0}", responseData);
+            // Read the first batch of the TcpServer response bytes
+            
+                Int32 bytes = Stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+           
             return responseData;
         }
 
@@ -45,7 +52,6 @@ namespace FlightSimulatorApp.Model
         {
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(command);
             Stream.Write(data, 0, data.Length);
-            Console.WriteLine("Sent: {0}", command);
         }
     }
 }
