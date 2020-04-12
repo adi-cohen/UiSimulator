@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace FlightSimulatorApp.ViewModel
 {
 
-    class SimulatorViewModel : INotifyPropertyChanged
+   public class SimulatorViewModel : INotifyPropertyChanged
     {
         private string ip = ConfigurationManager.AppSettings["default_ip"].ToString();
         public string VM_IP
@@ -97,14 +97,14 @@ namespace FlightSimulatorApp.ViewModel
             model.setRudder(rudder); //X
             model.setElevator(elevator); //Y
         }
-        public void connect ()
+        public async Task connect ()
         {
-            model.connect(ip, port);
-            model.start();
+            await Task.Run(() => model.connect(ip, port));
+            await Task.Run(() => model.start());
         }
-        public void disconnect()
+        public async Task disconnect()
         {
-            model.disconnect();
+            await Task.Run(() => model.disconnect());
             port = int.Parse(ConfigurationManager.AppSettings["default_port"].ToString());
             ip = ConfigurationManager.AppSettings["default_ip"].ToString();
         }

@@ -1,5 +1,6 @@
 ﻿using FlightSimulatorApp.Model;
 using FlightSimulatorApp.ViewModel;
+using FlightSimulatorApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -27,15 +28,15 @@ namespace FlightSimulatorApp
         SimulatorViewModel vm;
         
 
-        public MainWindow()
-        {
+        public MainWindow(SimulatorViewModel newVm)
+        { 
             InitializeComponent();
             this.Dispatcher.UnhandledException += handleAllExceptions;
-            Console.WriteLine("starting!!!!");
-            IServerModel model = new ServerModel(new SimulatorTelnetClient());
-            vm = new SimulatorViewModel(model);
+            this.vm = newVm;
             DataContext = vm;
             Steers.DataContext = vm;
+            Dashboard.DataContext = vm;
+            // Map.DataContext = vm;
         }
 
 

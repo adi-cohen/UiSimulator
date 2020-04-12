@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,9 @@ namespace FlightSimulatorApp.Model
         private ITelentClient client;
         volatile Boolean isClientConnected;
         volatile Boolean isClientDisConnected;
-        private readonly Mutex mutex = new Mutex();
+        private Mutex mutex;
+        private static readonly Object obj = new Object();
+
 
         public void NotifyPropertyChanged(string propName)
         {
@@ -216,7 +219,6 @@ namespace FlightSimulatorApp.Model
         }
         public void disconnect()
         {
-            
             isClientConnected = false;
             IsClientConnected = false;
             IsClientDisConnected = true;
@@ -226,64 +228,57 @@ namespace FlightSimulatorApp.Model
         }
         public async Task start()
         {
-            /*new Thread(delegate()
-            {*/
-                while (isClientConnected)
+            while (isClientConnected)
+            {
+                lock (obj)
                 {
-                    mutex.WaitOne();
-                    try
+                    HeadingDeg = ReadFromSimulator("/instrumentation/heading-indicator/indicated-heading-deg", headingDeg, "headingDeg");
+                    GpsVerticalSpeed = ReadFromSimulator("/instrumentation/gps/indicated-vertical-speed", gpsVerticalSpeed, "gpsVerticalSpeed");
+                    GpsGroundSpeed = ReadFromSimulator("/instrumentation/gps/indicated-ground-speed-kt", gpsGroundSpeed, "gpsGroundSpeed");
+                    AirspeedSpeed = ReadFromSimulator("/instrumentation/airspeed-indicator/indicated-speed-kt", airspeedSpeed, "airspeedSpeed");
+                    GpsAltitude = ReadFromSimulator("/instrumentation/gps/indicated-altitude-ft", gpsAltitude, "gpsAltitude");
+                    AltitudeInternalRolDeg = ReadFromSimulator("/instrumentation/attitude-indicator/internal-roll-deg", altitudeInternalRolDeg, "altitudeInternalRolDeg");
+                    AltitudeInternalPitchDeg = ReadFromSimulator("/instrumentation/attitude-indicator/internal-pitch-deg", altitudeInternalPitchDeg, "altitudeInternalPitchDeg");
+                    AltimeterAltitude = ReadFromSimulator("/instrumentation/altimeter/indicated-altitude-ft", altimeterAltitude, "altimeterAltitude");
+
+
+
+                    // map property
+                    double tempPositionLatitudeDeg = ReadFromSimulator("/position/latitude-deg", positionLatitudeDeg, "positionLatitudeDeg");
+                    if (tempPositionLatitudeDeg < -90)
                     {
-                        HeadingDeg = await Task.Run(()=> ReadFromSimulator("/instrumentation/heading-indicator/indicated-heading-deg", headingDeg, "headingDeg"));
-                        GpsVerticalSpeed = await Task.Run(() => ReadFromSimulator("/instrumentation/gps/indicated-vertical-speed", gpsVerticalSpeed, "gpsVerticalSpeed"));
-                        GpsGroundSpeed = await Task.Run(() => ReadFromSimulator("/instrumentation/gps/indicated-ground-speed-kt", gpsGroundSpeed, "gpsGroundSpeed"));
-                        AirspeedSpeed = await Task.Run(() => ReadFromSimulator("/instrumentation/airspeed-indicator/indicated-speed-kt", airspeedSpeed, "airspeedSpeed"));
-                        GpsAltitude = await Task.Run(() => ReadFromSimulator("/instrumentation/gps/indicated-altitude-ft", gpsAltitude, "gpsAltitude"));
-                        AltitudeInternalRolDeg = await Task.Run(() => ReadFromSimulator("/instrumentation/attitude-indicator/internal-roll-deg", altitudeInternalRolDeg, "altitudeInternalRolDeg"));
-                        AltitudeInternalPitchDeg = await Task.Run(() => ReadFromSimulator("/instrumentation/attitude-indicator/internal-pitch-deg", altitudeInternalPitchDeg, "altitudeInternalPitchDeg"));
-                        AltimeterAltitude = await Task.Run(() => ReadFromSimulator("/instrumentation/altimeter/indicated-altitude-ft", altimeterAltitude, "altimeterAltitude"));
-
-
-
-                        // map property
-                        double tempPositionLatitudeDeg = await Task.Run(() => ReadFromSimulator("/position/latitude-deg", positionLatitudeDeg, "positionLatitudeDeg"));
-                            if (tempPositionLatitudeDeg< -90)
-                            {
-                                PositionLatitudeDeg = -90;
-                            }
-                            else if (tempPositionLatitudeDeg > 90)
-                            {
-                                PositionLatitudeDeg = 90;
-                            }
-                            else
-                            {
-                                PositionLatitudeDeg = tempPositionLatitudeDeg;
-                            }
-                        double tempPositionLongitudeDeg = await Task.Run(() => ReadFromSimulator("/position/longitude-deg", positionLongitudeDeg, "positionLongitudeDeg"));
-                            if (tempPositionLongitudeDeg < -180)
-                            {
-                                PositionLongitudeDeg = -180;
-                            }
-                            else if (tempPositionLongitudeDeg > 180)
-                            {
-                                PositionLongitudeDeg = 180;
-                            }
-                            else
-                            {
-                                PositionLongitudeDeg = tempPositionLongitudeDeg;
-                            }
-                    Console.WriteLine("lat "+PositionLatitudeDeg);
-                    Console.WriteLine("long "+PositionLongitudeDeg);
+                        PositionLatitudeDeg = -90;
+                    }
+                    else if (tempPositionLatitudeDeg > 90)
+                    {
+                        PositionLatitudeDeg = 90;
+                    }
+                    else
+                    {
+                        PositionLatitudeDeg = tempPositionLatitudeDeg;
+                    }
+                    double tempPositionLongitudeDeg = ReadFromSimulator("/position/longitude-deg", positionLongitudeDeg, "positionLongitudeDeg");
+                    if (tempPositionLongitudeDeg < -180)
+                    {
+                        PositionLongitudeDeg = -180;
+                    }
+                    else if (tempPositionLongitudeDeg > 180)
+                    {
+                        PositionLongitudeDeg = 180;
+                    }
+                    else
+                    {
+                        PositionLongitudeDeg = tempPositionLongitudeDeg;
+                    }
+                    Console.WriteLine("lat " + PositionLatitudeDeg);
+                    Console.WriteLine("long " + PositionLongitudeDeg);
 
                     Location = positionLatitudeDeg + "," + positionLongitudeDeg;
 
-                    }
-                    finally
-                    {
-                        mutex.ReleaseMutex();
-                    }
-                await Task.Delay(2000);                    
                 }
-           /* }).Start();*/
+                await Task.Delay(2000);
+            }
+            
         }
 
         public  double ReadFromSimulator(string path, double cuurentValue, string paramName)
@@ -293,54 +288,53 @@ namespace FlightSimulatorApp.Model
             try
             {
                 client.write("get " + path + "\n");
-            }
-            catch (Exception)
-            {
-                
-                FlightLogs = "TIME OUT - can not read "+paramName+" from simulator " ;
-            }
-            try
-            {
-                 a = client.read();
-            } catch (Exception)
-            {
-                FlightLogs = "TIME OUT - can not read " + paramName + " from simulator ";
-            }
-            try
-            {
+                a = client.read();
                 answer = Double.Parse(a);
             }
-            catch (System.FormatException )
+            catch (System.FormatException)
             {
                 answer = cuurentValue;
-                FlightLogs = "Error - can not get " + paramName + " value. The previous value is displayed";
+                FlightLogs = "Server internal error. param: " + paramName + " failed. The previous value is displayed";
             }
-        
+            catch (ObjectDisposedException e)
+            {
+                FlightLogs = e.Message;
+            }
+            catch (IOException e)
+            {
+                FlightLogs = "Time out exception - failed reading from server: "+ paramName;
+            }
+            catch (Exception e)
+            {
+                FlightLogs = "General - error"+paramName+" from simulator " + e.Message;
+            }
             return answer;
         }
 
         public void WriteToSimulator(string path, double val, string paramName)
         {
             if (isClientConnected)
-
             {
-                mutex.WaitOne();
-                
-                try
+                lock (obj)
                 {
-                    client.write("set " + path + " " + val + "\n");
-                    String a = client.read();
-                    Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                    try
+                    {
+                        client.write("set " + path + " " + val + "\n");
+                        String a = client.read();
+                        if (a.Contains("ERR"))
+                        {
+                            FlightLogs = "Server internal error. param: " + paramName + " failed. The previous value is displayed";
+                        }
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        FlightLogs = "Time out exception - failed writing to server: " + paramName;
+                    }
+                    catch (Exception e)
+                    {
+                        FlightLogs = "General - error" + paramName + " from simulator " + e.Message;
+                    }
                 }
-                catch (System.IO.IOException )
-                {
-                    FlightLogs = "TIME OUT- can not write" + paramName+ "to simulator";
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
-                }
-               
             }
             
         }
