@@ -401,8 +401,10 @@
     <Grid>
         <StackPanel Grid.Row="1"  Grid.Column="2">
             <DataGridCellsPanel Height="10"/>
+         
             <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" FontSize="18">Aileron:</TextBlock>
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="{Binding ElementName=aileron,Path=Value}"></TextBlock>
+
             <Slider x:Name="aileron"  Width="300"  Orientation="Horizontal" HorizontalAlignment="Center" 
                 IsSnapToTickEnabled="True" Maximum="1" Minimum="-1" TickPlacement="BottomRight" TickFrequency="0.1" Value="{Binding VM_Aileron}"
                 AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"  />
@@ -425,7 +427,6 @@
                 <TextBlock  TextAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" FontSize="16" Text="Elevator: ">
                     <TextBlock.LayoutTransform>
                         <RotateTransform
-
                     Angle="90"/>
                     </TextBlock.LayoutTransform>
                    </TextBlock>

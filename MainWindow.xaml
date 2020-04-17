@@ -31,7 +31,7 @@
                     <TextBox Grid.Column="1" Text="{Binding Path= VM_Port, FallbackValue=5402}" Grid.Row="0" Name="insertPort" Margin="5" />
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" FontSize="14" FontWeight="Bold">IP:</TextBlock>
                     <TextBox Grid.Column="1" Text="{Binding Path =VM_IP, FallbackValue=127.0.0.1}" Grid.Row="1" Name="insertIP" Margin="5"/>
-                    <Button Click="connectOnClick" Grid.Row ="2" Margin="5" Grid.Column="1" >CONNECT
+                    <Button Click="ConnectOnClick" Grid.Row ="2" Margin="5" Grid.Column="1" >CONNECT
                         <Button.Triggers>
                             <EventTrigger RoutedEvent="Button.Click">
                                 <EventTrigger.Actions>
@@ -69,7 +69,7 @@
                     <StackPanel Grid.Column="1" Margin="5">
                         <DockPanel>
                         <TextBlock x:Name="logs" Margin="5" FontWeight="Bold" >Flight Logs And Errors:</TextBlock>
-                            <Button Margin="5" HorizontalAlignment="Right" Width="60" Click="clearLogs">Clear Logs</Button>
+                            <Button Margin="5" HorizontalAlignment="Right" Width="60" Click="ClearLogs">Clear Logs</Button>
                         </DockPanel>
                         <Border BorderBrush="Black" BorderThickness="1" >
                             <TextBlock x:Name="LogErros" Height="50" TextAlignment="Center" Text="{Binding Path=VM_FlightLogs, Mode=OneWay}"></TextBlock>
@@ -100,7 +100,7 @@
                         </Button>
                         
                         <DataGridCellsPanel Height="10" />
-                        <Button Click="disConnectOnClick" IsEnabled="{Binding VM_IsClientConnected}" Background="#FFE28484" Margin="10,0,10,0">
+                        <Button Click="DisConnectOnClick" IsEnabled="{Binding VM_IsClientConnected}" Background="#FFE28484" Margin="10,0,10,0">
                             disconnect
                         </Button>
                         
@@ -108,9 +108,8 @@
                     
                 </Grid>
             </DockPanel>
-            <m:Map Margin="5" ZoomLevel="3" Center="32.006333,34.873331" CredentialsProvider="WhSddLA2S13tsRQdLdUO~2QYy4xWPO3FqXq3i9CYL0A~AoAQIC9zMAv4-wbgOQO1eCTEN9hpC5iSrTrcG0wQvDV-wFzgWhdZqdMu7cGPM3wJ"  VerticalContentAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" >
-                <m:Pushpin m:MapLayer.Position="{Binding VM_Location}" />
-            </m:Map>
+            <views:Map x:Name="Map" Margin="5" VerticalContentAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch"> </views:Map>
+            
         </Grid>
 
         <Grid Grid.Column="1" Margin="4.2,0,-0.2,-0.2">
@@ -123,23 +122,9 @@
             <Grid.ColumnDefinitions>
             </Grid.ColumnDefinitions>
             <views:Dashboard x:Name ="Dashboard" Grid.Column="2" Margin="5">
+                
             </views:Dashboard>
             
-
-            <!--StackPanel Grid.Row="1"  Grid.Column="2">
-                <DataGridCellsPanel Height="10"/>
-                <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" FontSize="18">Aileron</TextBlock>
-                <Slider  Width="300"  Orientation="Horizontal" HorizontalAlignment="Center" 
-                IsSnapToTickEnabled="True" Maximum="10" TickPlacement="BottomRight" TickFrequency="1" Value="{Binding VM_Aileron}"
-                AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"  />
-                <DataGridCellsPanel Height="5"/>
-                <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" FontSize="18">Throttle</TextBlock>
-                <Slider  Width="300"  Orientation="Horizontal" HorizontalAlignment="Center" 
-                IsSnapToTickEnabled="True" Maximum="10" TickPlacement="BottomRight" TickFrequency="1" Value="{Binding VM_Throttle}"/>
-            </-->
-
-
-            <!--views:Joystick Grid.Row="2" HorizontalAlignment="Right" Margin="-26,0,26,-0.2"/-->
             <views:Steers x:Name="Steers" Grid.Row="1"  />
         </Grid>
 

@@ -20,7 +20,6 @@ namespace FlightSimulatorApp.Views
         public static readonly DependencyProperty RudderProperty =
             DependencyProperty.Register("Rudder", typeof(double), typeof(Joystick), null);
 
-
         public double Elevator
         {
             get { return Convert.ToDouble(GetValue(ElevatorProperty)); }
@@ -43,8 +42,10 @@ namespace FlightSimulatorApp.Views
         private bool isPressed;
         private double newX, newY;
         //members for the Animation
-        private Storyboard sb;
-        private DoubleAnimation x, y;
+        private readonly Storyboard sb;
+        private readonly DoubleAnimation x;
+        private readonly DoubleAnimation y;
+
         public Joystick()
         {
             InitializeComponent();
@@ -57,15 +58,13 @@ namespace FlightSimulatorApp.Views
             x.From = 0;
             y.From = 0;
         }
- 
-        private void centerKnob_Completed(object sender, EventArgs e)
-        {
 
+        private void CenterKnob_Completed(object sender, EventArgs e)
+        {
         }
 
         private void Knob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
             isPressed = true;
             Knob.CaptureMouse();
         }
@@ -78,7 +77,7 @@ namespace FlightSimulatorApp.Views
                 newY = e.GetPosition(Base).Y;
                 //cheak if the knobBase is in Bound
                 double bound = Math.Sqrt(Math.Pow(newX - center.X, 2) + Math.Pow(newY - center.Y, 2));
-                //Console.WriteLine("bound "+bound);
+                
                 if (bound > (this.Base.Width / 2) - (KnobBase.Width / 2))
                 {
                     return;
@@ -91,10 +90,8 @@ namespace FlightSimulatorApp.Views
                     y.To = newY - center.Y;
                     x.To = newX - center.X;
                     double diff = Math.Sqrt(Math.Pow(x.To.GetValueOrDefault() - x.From.GetValueOrDefault(), 2) + Math.Pow(y.To.GetValueOrDefault() - y.From.GetValueOrDefault(), 2));
-                    //Console.WriteLine("diff " + diff);
                     if (diff > 1)
                     {
-                        Console.WriteLine("In diff:  " + diff);
                         DiffFromLastPosition = diff;
                     }
                     sb.Begin();
@@ -104,11 +101,8 @@ namespace FlightSimulatorApp.Views
             }
         }
 
-       
-
         private void Knob_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            
             isPressed = false;
             Knob.ReleaseMouseCapture();
             //return knobBase to center
@@ -119,7 +113,6 @@ namespace FlightSimulatorApp.Views
             x.From = x.To;
             y.From = y.To;
             Rudder = Elevator = 0;
-
         }
     }
 }

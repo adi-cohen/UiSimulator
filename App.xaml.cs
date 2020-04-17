@@ -19,8 +19,11 @@ namespace FlightSimulatorApp
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             IServerModel model = new ServerModel(new SimulatorTelnetClient());
-            SimulatorViewModel vm = new SimulatorViewModel(model);
-            MainWindow window = new MainWindow(vm);
+            SimulatorViewModel SimulatorVm = new SimulatorViewModel(model);
+            SteersViewModel SteersVm = new SteersViewModel(model);
+            MapViewModel MapVm = new MapViewModel(model);
+            DashboardViewModel DashboardVm = new DashboardViewModel(model);
+            MainWindow window = new MainWindow(SimulatorVm, SteersVm, MapVm, DashboardVm);
             window.Show();
         }
     }

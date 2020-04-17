@@ -12,10 +12,10 @@ namespace FlightSimulatorApp.Model
     public class ServerModel : IServerModel
     {
         public event PropertyChangedEventHandler PropertyChanged = null;
-        private ITelentClient client;
+        private readonly ITelentClient client;
         volatile Boolean isClientConnected;
-        volatile Boolean isClientDisConnected;
-        private Mutex mutex;
+        volatile bool isClientDisConnected;
+
         private static readonly Object obj = new Object();
 
 
@@ -23,7 +23,7 @@ namespace FlightSimulatorApp.Model
         {
             if (this.PropertyChanged != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
         #region Dashboard Properties
@@ -41,7 +41,8 @@ namespace FlightSimulatorApp.Model
 
 
         private double gpsVerticalSpeed;
-        public double GpsVerticalSpeed {
+        public double GpsVerticalSpeed
+        {
             get
             { return gpsVerticalSpeed; }
             set
@@ -51,14 +52,16 @@ namespace FlightSimulatorApp.Model
             }
         }
 
-        
+
         public bool IsClientConnected
         {
             get { return isClientConnected; }
-            set { isClientConnected = value;
+            set
+            {
+                isClientConnected = value;
                 NotifyPropertyChanged("IsClientConnected");
             }
-         }
+        }
 
         public bool IsClientDisConnected
         {
@@ -86,7 +89,8 @@ namespace FlightSimulatorApp.Model
         }
 
         private double gpsGroundSpeed;
-        public double GpsGroundSpeed {
+        public double GpsGroundSpeed
+        {
             get
             { return gpsGroundSpeed; }
             set
@@ -96,7 +100,8 @@ namespace FlightSimulatorApp.Model
             }
         }
         private double airspeedSpeed;
-        public double AirspeedSpeed {
+        public double AirspeedSpeed
+        {
             get
             { return airspeedSpeed; }
             set
@@ -106,7 +111,8 @@ namespace FlightSimulatorApp.Model
             }
         }
         private double gpsAltitude;
-        public double GpsAltitude {
+        public double GpsAltitude
+        {
             get
             { return gpsAltitude; }
             set
@@ -116,7 +122,8 @@ namespace FlightSimulatorApp.Model
             }
         }
         private double altitudeInternalRolDeg;
-        public double AltitudeInternalRolDeg {
+        public double AltitudeInternalRolDeg
+        {
             get
             { return altitudeInternalRolDeg; }
             set
@@ -126,7 +133,8 @@ namespace FlightSimulatorApp.Model
             }
         }
         private double altitudeInternalPitchDeg;
-        public double AltitudeInternalPitchDeg {
+        public double AltitudeInternalPitchDeg
+        {
             get
             { return altitudeInternalPitchDeg; }
             set
@@ -136,7 +144,8 @@ namespace FlightSimulatorApp.Model
             }
         }
         private double altimeterAltitude;
-        public double AltimeterAltitude {
+        public double AltimeterAltitude
+        {
             get
             { return altimeterAltitude; }
             set
@@ -147,7 +156,7 @@ namespace FlightSimulatorApp.Model
         }
         #endregion
 
-      
+
 
         #region map property
 
@@ -187,7 +196,7 @@ namespace FlightSimulatorApp.Model
             }
         }
 
-       
+
         #endregion
 
         public ServerModel(ITelentClient telentClient)
@@ -201,11 +210,11 @@ namespace FlightSimulatorApp.Model
             Location = "32.00264, 34.888781";
             FlightLogs = "";
         }
-        public void connect(string ip, int port)
+        public void Connect(string ip, int port)
         {
             try
             {
-                client.connect(ip, port);
+                client.Connect(ip, port);
                 isClientConnected = true;
 
                 IsClientConnected = true;
@@ -217,16 +226,16 @@ namespace FlightSimulatorApp.Model
                 FlightLogs = "Unable to connect to server, please try again";
             }
         }
-        public void disconnect()
+        public void Disconnect()
         {
             isClientConnected = false;
             IsClientConnected = false;
             IsClientDisConnected = true;
             FlightLogs = "Disconnection from the server succeeded";
-            client.disconnect();
-           
+            client.Disconnect();
+
         }
-        public async Task start()
+        public async Task Start()
         {
             while (isClientConnected)
             {
@@ -241,16 +250,16 @@ namespace FlightSimulatorApp.Model
                     AltitudeInternalPitchDeg = ReadFromSimulator("/instrumentation/attitude-indicator/internal-pitch-deg", altitudeInternalPitchDeg, "altitudeInternalPitchDeg");
                     AltimeterAltitude = ReadFromSimulator("/instrumentation/altimeter/indicated-altitude-ft", altimeterAltitude, "altimeterAltitude");
 
-
-
                     // map property
                     double tempPositionLatitudeDeg = ReadFromSimulator("/position/latitude-deg", positionLatitudeDeg, "positionLatitudeDeg");
                     if (tempPositionLatitudeDeg < -90)
                     {
+                        FlightLogs = "The plane reached the minimum LatitudeDeg";
                         PositionLatitudeDeg = -90;
                     }
                     else if (tempPositionLatitudeDeg > 90)
                     {
+                        FlightLogs = "The plane reached the maximum LatitudeDeg";
                         PositionLatitudeDeg = 90;
                     }
                     else
@@ -260,35 +269,34 @@ namespace FlightSimulatorApp.Model
                     double tempPositionLongitudeDeg = ReadFromSimulator("/position/longitude-deg", positionLongitudeDeg, "positionLongitudeDeg");
                     if (tempPositionLongitudeDeg < -180)
                     {
+                        FlightLogs = "The plane reached the minimum LongitudeDeg";
                         PositionLongitudeDeg = -180;
                     }
                     else if (tempPositionLongitudeDeg > 180)
                     {
+                        FlightLogs = "The plane reached the maximum LongitudeDeg";
                         PositionLongitudeDeg = 180;
                     }
                     else
                     {
                         PositionLongitudeDeg = tempPositionLongitudeDeg;
                     }
-                    Console.WriteLine("lat " + PositionLatitudeDeg);
-                    Console.WriteLine("long " + PositionLongitudeDeg);
 
                     Location = positionLatitudeDeg + "," + positionLongitudeDeg;
 
                 }
                 await Task.Delay(2000);
             }
-            
+
         }
 
-        public  double ReadFromSimulator(string path, double cuurentValue, string paramName)
+        public double ReadFromSimulator(string path, double cuurentValue, string paramName)
         {
-            String a = "";
-            Double answer = cuurentValue;
+            double answer = cuurentValue;
             try
             {
-                client.write("get " + path + "\n");
-                a = client.read();
+                client.Write("get " + path + "\n");
+                string a = client.Read();
                 answer = Double.Parse(a);
             }
             catch (System.FormatException)
@@ -300,13 +308,13 @@ namespace FlightSimulatorApp.Model
             {
                 FlightLogs = e.Message;
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                FlightLogs = "Time out exception - failed reading from server: "+ paramName;
+                FlightLogs = "Time out exception - failed reading from server: " + paramName;
             }
             catch (Exception e)
             {
-                FlightLogs = "General - error"+paramName+" from simulator " + e.Message;
+                FlightLogs = "General - error" + paramName + " from simulator " + e.Message;
             }
             return answer;
         }
@@ -319,8 +327,8 @@ namespace FlightSimulatorApp.Model
                 {
                     try
                     {
-                        client.write("set " + path + " " + val + "\n");
-                        String a = client.read();
+                        client.Write("set " + path + " " + val + "\n");
+                        String a = client.Read();
                         if (a.Contains("ERR"))
                         {
                             FlightLogs = "Server internal error. param: " + paramName + " failed. The previous value is displayed";
@@ -336,32 +344,31 @@ namespace FlightSimulatorApp.Model
                     }
                 }
             }
-            
         }
 
-        public async Task setRudder(double rudder)
+        public async Task SetRudder(double rudder)
         {
-            await Task.Run(() => WriteToSimulator("/controls/flight/rudder", rudder,"rudder"));
+            await Task.Run(() => WriteToSimulator("/controls/flight/rudder", rudder, "rudder"));
         }
 
-        public async Task setThrottle(double throttle)
+        public async Task SetThrottle(double throttle)
         {
             await Task.Run(() => WriteToSimulator("/controls/engines/current-engine/throttle", throttle, "throttle"));
         }
 
 
-        public async Task setAileron(double aileron)
+        public async Task SetAileron(double aileron)
         {
             await Task.Run(() => WriteToSimulator("/controls/flight/aileron", aileron, "aileron"));
         }
 
-        public async Task setElevator(double elevator)
+        public async Task SetElevator(double elevator)
         {
 
             await Task.Run(() => WriteToSimulator("/controls/flight/elevator", elevator, "elevator"));
         }
 
-        public void setflightlogs(string value)
+        public void Setflightlogs(string value)
         {
             FlightLogs = value;
         }

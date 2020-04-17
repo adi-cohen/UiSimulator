@@ -7,16 +7,17 @@ namespace FlightSimulatorApp.Model
     public interface IServerModel : INotifyPropertyChanged
     {
         // connection to the simulator
-        void connect(string ip, int port);
-        void disconnect();
-        Task start();
+        void Connect(string ip, int port);
+        void Disconnect();
+        Task Start();
         Boolean IsClientConnected { get; set; }
         Boolean IsClientDisConnected { get; set; }
 
         //dashboard properties
-        double HeadingDeg { get; set; }
         double GpsVerticalSpeed { get; set; }
         double GpsGroundSpeed { get; set; }
+        double HeadingDeg { get; set; }
+
         double AirspeedSpeed { get; set; }
         double GpsAltitude { get; set; }
         double AltitudeInternalRolDeg { get; set; }
@@ -32,10 +33,10 @@ namespace FlightSimulatorApp.Model
         double PositionLatitudeDeg { get; set; }
 
         //comands
-        Task setRudder(double rudder);
-        Task setThrottle(double throttle);
-        Task setAileron(double aileron);
-        Task setElevator(double elevator);
-        void setflightlogs(string value);
+        Task SetRudder(double rudder);
+        Task SetThrottle(double throttle);
+        Task SetAileron(double aileron);
+        Task SetElevator(double elevator);
+        void Setflightlogs(string value);
     }
 }

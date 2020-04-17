@@ -13,44 +13,44 @@
                 <DockPanel >
                     <StackPanel>
                         <TextBlock  Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3" >Heading Deg</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_HeadingDeg}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_HeadingDeg,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
                     <StackPanel  HorizontalAlignment="Right">
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">Gps Vertical Speed</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_GpsVerticalSpeed}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_GpsVerticalSpeed ,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
 
                 </DockPanel>
                 <DockPanel>
                     <StackPanel>
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">Gps Ground Speed</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_GpsGroundSpeed}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_GpsGroundSpeed,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
                     <StackPanel  HorizontalAlignment="Right">
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">Air Speed</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_AirspeedSpeed}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path= VM_AirspeedSpeed,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
 
                 </DockPanel>
                 <DockPanel>
                     <StackPanel>
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">GPS Altitude</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_GpsAltitude}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_GpsAltitude,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
                     <StackPanel  HorizontalAlignment="Right">
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">Altitude Internal Rol Deg</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltitudeInternalRolDeg}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltitudeInternalRolDeg,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
 
                 </DockPanel>
                 <DockPanel>
                     <StackPanel>
                         <TextBlock Width="180" TextAlignment="Center" FontWeight="Bold" Background="#FFEEC3C3">Altitude Internal Pitch Deg</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltitudeInternalPitchDeg}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltitudeInternalPitchDeg,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
                     <StackPanel  HorizontalAlignment="Right">
                         <TextBlock Width="180" FontWeight="Bold" TextAlignment="Center" Background="#FFEEC3C3">Altimeter Altitude</TextBlock>
-                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltimeterAltitude}" ></TextBlock>
+                        <TextBlock Width="180" TextAlignment="Center" Text="{Binding Path=VM_AltimeterAltitude,StringFormat=0.00#}" ></TextBlock>
                     </StackPanel>
                 </DockPanel>
             </StackPanel>

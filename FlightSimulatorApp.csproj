@@ -63,7 +63,10 @@
     <Compile Include="Model\ITelentClient.cs" />
     <Compile Include="Model\ServerModel.cs" />
     <Compile Include="Model\SimulatorTelnetClient.cs" />
+    <Compile Include="ViewModel\DashboardViewModel.cs" />
+    <Compile Include="ViewModel\MapViewModel.cs" />
     <Compile Include="ViewModel\SimulatorViewModel.cs" />
+    <Compile Include="ViewModel\SteersViewModel.cs" />
     <Compile Include="Views\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>

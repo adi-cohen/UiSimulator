@@ -25,50 +25,46 @@ namespace FlightSimulatorApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        SimulatorViewModel vm;
-        
+        readonly SimulatorViewModel vm;
 
-        public MainWindow(SimulatorViewModel newVm)
-        { 
+        public MainWindow(SimulatorViewModel SimulatorVm, SteersViewModel SteersVm, MapViewModel MapVm, DashboardViewModel DashboardVm)
+        {
             InitializeComponent();
-            this.Dispatcher.UnhandledException += handleAllExceptions;
-            this.vm = newVm;
+            this.Dispatcher.UnhandledException += HandleAllExceptions;
+            this.vm = SimulatorVm;
             DataContext = vm;
-            Steers.DataContext = vm;
-            Dashboard.DataContext = vm;
-            // Map.DataContext = vm;
+            Steers.DataContext = SteersVm;
+            Dashboard.DataContext = DashboardVm;
+            Map.DataContext = MapVm;
         }
 
-
-
-        private void handleAllExceptions(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void HandleAllExceptions(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             LogErros.Text = e.Exception.Message;
             e.Handled = true;
         }
 
-        private void connectOnClick(object sender, RoutedEventArgs e)
-        {
-            vm.connect();
-            resetPortIp();
-        }
-        private void disConnectOnClick(object sender, RoutedEventArgs e)
-        {
-            resetPortIp();
-            vm.disconnect();
-        }
-
-        private void clearLogs(object sender, RoutedEventArgs e)
+        private void ClearLogs(object sender, RoutedEventArgs e)
         {
             vm.VM_FlightLogs = "";
-
         }
 
-        private void resetPortIp()
+        private void ResetPortIp()
         {
-            vm.VM_Port =  int.Parse(ConfigurationManager.AppSettings["default_port"].ToString());
+            vm.VM_Port = int.Parse(ConfigurationManager.AppSettings["default_port"].ToString());
             vm.VM_IP = ConfigurationManager.AppSettings["default_ip"].ToString();
+        }
 
+        private void DisConnectOnClick(object sender, RoutedEventArgs e)
+        {
+            ResetPortIp();
+            _ = vm.Disconnect();
+        }
+
+        private void ConnectOnClick(object sender, RoutedEventArgs e)
+        {
+            _ = vm.Connect();
+            ResetPortIp();
         }
     }
 }

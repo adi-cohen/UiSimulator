@@ -42,13 +42,14 @@ class FlightSimulator:
         if var_value > max_range:
             var_value = max_range
         self.variables[var_name] = var_value
+        #time.sleep(20)
        
         return self.get_value(var_name)
 
     def get_value(self, var_name: str):
         var_value = self.variables[var_name]
        # print("get "+var_name)
-        self.variables[var_name] = var_value + 1
+        self.variables[var_name] = var_value + 0.1
         # print(var_value)
         return str(var_value)
 
