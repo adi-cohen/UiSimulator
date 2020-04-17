@@ -2,6 +2,7 @@ import argparse
 import socket
 import logging
 import math
+import time
 from typing import Dict, List, Tuple
 
 DEFAULT_LISTEN_PORT = 5402
@@ -41,11 +42,15 @@ class FlightSimulator:
         if var_value > max_range:
             var_value = max_range
         self.variables[var_name] = var_value
+        #time.sleep(20)
+       
         return self.get_value(var_name)
 
     def get_value(self, var_name: str):
         var_value = self.variables[var_name]
-        self.variables[var_name] = var_value+0.001
+       # print("get "+var_name)
+        self.variables[var_name] = var_value + 0.1
+        # print(var_value)
         return str(var_value)
 
     def process(self, command: str):
@@ -108,15 +113,18 @@ class Server:
             data = client_socket.recv(self.chunk_size)
             while data:
                 text = data.decode('ascii')
+                # print(text)
                 # Concatenate whatever comes from the client
                 # with the previous unhandled partial message
                 buffer += text
                 commands, buffer = Server.process_text(buffer)
                 for command in commands:
+                    # print(command)
                     result = message_handler(command) + '\n'
                     result_data = result.encode('ascii')
                     client_socket.sendall(result_data)
-                data = client_socket.recv(self.chunk_size)
+                    data = client_socket.recv(self.chunk_size)
+                   # time.sleep(20) 
 
     @staticmethod
     def process_text(buffer):
@@ -132,15 +140,15 @@ class Server:
         commands = [line.strip() for line in lines if line.strip()]
         # last unprocessed text (didn't end with a newline)
         # becomes the new buffer
+        # print(commands)
         return commands, next_buffer
 
 
 def main(args):
     server = Server(args.listen_port)
-    print("hi2")
 
     simulator = FlightSimulator(EXAMPLE_FIELDS)
-    print("hi")
+    print("start")
     server.serve(simulator)
 
 

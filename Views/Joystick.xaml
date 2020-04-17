@@ -47,9 +47,9 @@
                 </Path.RenderTransform>
             </Path>
 
-            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125">
+            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125" MouseMove="Knob_MouseMove" MouseLeftButtonUp="Knob_MouseUp" MouseLeftButtonDown="Knob_MouseDown">
                 <!--<Ellipse x:Name="Shadow" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="86" Fill="#52131212" Canvas.Left="22" Canvas.Top="18" />-->
-                <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1">
+                <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1" >
                     <Ellipse.Fill>
                         <RadialGradientBrush>
                             <GradientStop Color="#FF8A8A8A" />
@@ -95,7 +95,12 @@
                         </RadialGradientBrush>
                     </Ellipse.Fill>
                     <Ellipse.RenderTransform>
-                        <RotateTransform Angle="-31.733"></RotateTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-118.59"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
                     </Ellipse.RenderTransform>
                 </Ellipse>
                 <Ellipse HorizontalAlignment="Left" Height="37" VerticalAlignment="Top" Width="39" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Canvas.Left="14.001" Canvas.Top="11.001">
@@ -117,7 +122,7 @@
                 </Canvas.RenderTransform>
                 <Canvas.Resources>
 
-                    <Storyboard x:Key="CenterKnob" Name="centerKnob" Completed="centerKnob_Completed">
+                    <Storyboard x:Key="CenterKnob" Name="centerKnob" Completed="CenterKnob_Completed">
 
                         <DoubleAnimation Storyboard.TargetName="knobPosition"
                              Storyboard.TargetProperty="X" To="0" Duration="0:0:0.2">

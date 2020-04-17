@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FlightSimulatorApp.Model
 {
@@ -11,41 +12,45 @@ namespace FlightSimulatorApp.Model
     {
         public TcpClient Client { get; set; }
         public NetworkStream Stream { get; set; }
-        
-    
-        void ITelentClient.connect(string ip, int port)
+
+
+        void ITelentClient.Connect(string ip, int port)
         {
-            Client = new TcpClient(ip, port);
+            //System.Net.Sockets.SocketException
+            Client = new TcpClient(ip, port)
+            {
+                ReceiveTimeout = 10000,
+                SendTimeout = 10000
+            };
             this.Stream = Client.GetStream();
+
         }
 
-        void ITelentClient.disconnect()
+        void ITelentClient.Disconnect()
         {
             // Close everything.
             Stream.Close();
             Client.Close();
         }
 
-        string ITelentClient.read()
+        string ITelentClient.Read()
         {
             // Buffer to store the response bytes.
-            Byte[] data=new Byte[256];
+            Byte[] data = new Byte[256];
 
-            // String to store the response ASCII representation.
-            String responseData = String.Empty;
+            // Read the first batch of the TcpServer response bytes
 
-            // Read the first batch of the TcpServer response bytes.
             Int32 bytes = Stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Console.WriteLine("Received: {0}", responseData);
+            // String to store the response ASCII representation.
+            string responseData = Encoding.ASCII.GetString(data, 0, bytes);
+
             return responseData;
         }
 
-        void ITelentClient.write(string command)
+        void ITelentClient.Write(string command)
         {
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(command);
             Stream.Write(data, 0, data.Length);
-            Console.WriteLine("Sent: {0}", command);
         }
     }
 }

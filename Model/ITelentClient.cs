@@ -8,10 +8,10 @@ namespace FlightSimulatorApp.Model
 {
     public interface ITelentClient
     {
-        void connect(string ip, int port);
-        void write(string command);
-        string read(); // blocking call
-        void disconnect();
+        void Connect(string ip, int port);
+        void Write(string command);
+        string Read(); // blocking call
+        void Disconnect();
 
     }
 }
